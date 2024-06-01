@@ -17,10 +17,8 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
         // Execute rg search
         // TODO: search on each keystroke instead of on enter
         KeyCode::Enter => {
-            if app.text_area.lines()[0].len() > 0 {
+            if !app.text_area.lines()[0].is_empty() {
                 app.search();
-            } else {
-                ()
             }
         }
         // Update text box
