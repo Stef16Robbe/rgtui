@@ -5,24 +5,55 @@ use tui_textarea::TextArea;
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
 
-/// Application.
+/// Application state.
 pub struct App {
     /// Is the application running?
     pub running: bool,
+
     /// Search text area.
-    pub text_area: TextArea<'static>,
+    pub search_area: TextAreaToggle,
+
+    /// Include files area.
+    pub include_files_area: TextAreaToggle,
+
+    // TODO: add files to exclude
+    /// Keeping track of our text areas so we can toggle
+    /// which one is active and which one isn't
+    pub all_areas: Vec<TextAreaToggle>,
+
     /// Search result paragraph.
-    pub search_res: Paragraph<'static>,
+    pub search_res_par: Paragraph<'static>,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct TextAreaToggle {
+    pub area: TextArea<'static>,
+    pub active: bool,
+}
+
+impl TextAreaToggle {
+    fn new_active() -> Self {
+        Self {
+            area: TextArea::default(),
+            active: true,
+        }
+    }
 }
 
 impl Default for App {
     /// Constructs a new instance of [`App`].
     fn default() -> Self {
-        Self {
+        let mut app = App {
             running: true,
-            text_area: TextArea::default(),
-            search_res: Paragraph::default(),
-        }
+            search_area: TextAreaToggle::new_active(),
+            include_files_area: TextAreaToggle::default(),
+            search_res_par: Paragraph::default(),
+            all_areas: vec![],
+        };
+
+        app.all_areas = vec![app.search_area.clone(), app.include_files_area.clone()];
+
+        app
     }
 }
 
@@ -43,11 +74,11 @@ impl App {
             .arg("--trim") // When set, all ASCII whitespace at the beginning of each line printed will be removed.
             .arg("--ignore-case") // When  this  flag  is  provided,  all patterns will be searched case insensitively.
             .arg("--line-number") // Show line numbers (1-based).
-            .arg(&self.text_area.lines()[0])
+            .arg(&self.search_area.area.lines()[0])
             .output()
             .expect("error executing rg search");
 
-        self.search_res = Paragraph::new(
+        self.search_res_par = Paragraph::new(
             std::str::from_utf8(&res.stdout)
                 .expect("could not convert rg search result to utf8 string")
                 .to_string(),
