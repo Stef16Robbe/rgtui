@@ -40,11 +40,11 @@ impl App {
         let res = Command::new("rg")
             .arg(&self.text_area.lines()[0]) // TODO: support multi-line search?
             .output()
-            .expect("error searching with rg");
+            .expect("error executing rg search");
 
         self.search_res = Paragraph::new(
             std::str::from_utf8(&res.stdout)
-                .expect("could not convert res to utf8 string")
+                .expect("could not convert rg search result to utf8 string")
                 .to_string(),
         );
     }
