@@ -38,6 +38,10 @@ impl App {
     pub fn search(&mut self) {
         // TODO: add support for complex search
         let res = Command::new("rg")
+            .arg("--fixed-strings") // Treat all patterns as literals instead of as regular expressions.
+            .arg("--heading") // This flag prints the file path above clusters of matches from each file instead of printing the file path as a prefix for each matched line.
+            .arg("--trim") // When set, all ASCII whitespace at the beginning of each line printed will be removed.
+            .arg("--ignore-case") // When  this  flag  is  provided,  all patterns will be searched case insensitively.
             .arg(&self.text_area.lines()[0]) // TODO: support multi-line search?
             .output()
             .expect("error executing rg search");
