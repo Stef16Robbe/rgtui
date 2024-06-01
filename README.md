@@ -22,18 +22,18 @@ src/
 └── ui.rs      -> renders the widgets / UI
 ```
 
-## TODO ripgrep options:
+## TODO
 
-- `-F`: always interpret as literal string, not as regex
-- `--heading`: This flag prints the file path above clusters of matches from each file instead of printing the file path as a prefix for each matched line.
-- `--trim`: When set, all ASCII whitespace at the beginning of each line printed will be removed.
-- `-i`: case insenstive search
-  - Maybe `-S` instead?
-- `-g`: glob searching, for including files (prepend `!` to ignore the pattern)
-  - Globs are interpreted in exactly the same way as .gitignore patterns. That is, later globs will override earlier globs.
-  - Maybe `--glob-case-insensitive` instead?
-- `--line-number` if necessary
-- `--json` if necessary
-- `--sort` ?
-- `--hidden` ?
-- `--no-ignore` ?
+### General features:
+
+- [ ] move config to struct, allow configuration of settings in UI
+- [ ] use JSON output and color-code based on that
+- [ ] support multi-line search
+
+### Possible `rg` options to support:
+
+- [ ]`-g` or `--glob-case-insensitive`: glob searching, for including files (prepend `!` to ignore the pattern)
+- [ ]`--json` if necessary
+- [ ]`--sort`
+- [ ]`--hidden`
+- [ ]`--no-ignore`
