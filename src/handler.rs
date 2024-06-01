@@ -14,6 +14,8 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
         KeyCode::Esc => {
             app.quit();
         }
+        // For now, disable newlines as multi-line search is not supported
+        KeyCode::Enter => (),
         // Search on keystrokes
         _ => {
             app.text_area.input(key_event);
