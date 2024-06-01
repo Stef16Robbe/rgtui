@@ -15,8 +15,13 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
             }
         }
         // Execute rg search
-        KeyCode::Enter if app.text_area.lines().len() > 1 => {
-            todo!("add search fn to app.rs");
+        // TODO: search on each keystroke instead of on enter
+        KeyCode::Enter => {
+            if app.text_area.lines()[0].len() > 0 {
+                app.search();
+            } else {
+                ()
+            }
         }
         // Update text box
         _ => {

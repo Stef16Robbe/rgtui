@@ -24,10 +24,10 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     // search_box.set_cursor_line_style(Style::default());
     app.text_area.set_placeholder_text("Search...");
 
-    let search_res = Paragraph::new("Waiting on search...")
-        .alignment(Alignment::Left)
-        .style(style);
+    // TODO: fix this
+    let res_box = app.search_res.clone();
+    let res_box = res_box.alignment(Alignment::Left).style(style);
 
     frame.render_widget(app.text_area.widget(), main_layout[0]);
-    frame.render_widget(search_res, main_layout[1]);
+    frame.render_widget(res_box, main_layout[1]);
 }
