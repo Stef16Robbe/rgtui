@@ -1,6 +1,15 @@
-## Simple template
+# rgtui
 
-The simple template will create the following project structure:
+Simple TUI wrapper around [ripgrep](https://github.com/BurntSushi/ripgrep), inspired by VSCode's [project search](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options)
+
+It's written with:
+
+- [ratatui](https://github.com/ratatui-org/ratatui)
+- [crossterm](https://github.com/crossterm-rs/crossterm)
+- [tui-textarea](https://github.com/rhysd/tui-textarea)
+- ...
+
+App layout (generated with [ratatui templates](https://github.com/ratatui-org/templates)):
 
 ```text
 src/
