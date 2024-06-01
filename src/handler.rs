@@ -4,16 +4,15 @@ use ratatui::widgets::Paragraph;
 
 /// Handles the key events and updates the state of [`App`].
 pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
+    // Exit application on `Ctrl-C`
+    if key_event.modifiers == KeyModifiers::CONTROL && key_event.code == KeyCode::Char('c') {
+        app.quit();
+    }
+
     match key_event.code {
         // Exit application on `ESC`
         KeyCode::Esc => {
             app.quit();
-        }
-        // Exit application on `Ctrl-C`
-        KeyCode::Char('c') | KeyCode::Char('C') => {
-            if key_event.modifiers == KeyModifiers::CONTROL {
-                app.quit();
-            }
         }
         // Search on keystrokes
         _ => {
