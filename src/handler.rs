@@ -41,7 +41,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
         // Toggle active fields
         KeyCode::Tab => {
             deactivate(&mut app.all_areas[app.active]);
-            app.active = (app.active + 1) % 2;
+            app.active = (app.active + 1) % 3;
             activate(&mut app.all_areas[app.active]);
         }
         // Search on keystrokes

@@ -26,33 +26,46 @@ pub struct App {
 impl Default for App {
     /// Constructs a new instance of [`App`].
     fn default() -> Self {
+        // Default to "active"
         let mut area_search = TextArea::default();
         area_search.set_placeholder_text("Start typing to search...");
-        area_search.set_cursor_line_style(Style::default());
-        area_search.set_cursor_style(Style::default());
+        area_search.set_cursor_line_style(Style::default().add_modifier(Modifier::UNDERLINED));
+        area_search.set_cursor_style(Style::default().add_modifier(Modifier::REVERSED));
         area_search.set_block(
             Block::default()
                 .borders(Borders::ALL)
-                .style(Style::default().fg(Color::DarkGray))
+                .style(Style::default())
                 .title("Search term"),
         );
 
+        // Default to "inactive"
         let mut area_files_include = TextArea::default();
-        area_files_include.set_placeholder_text("Files to include");
-        area_files_include
-            .set_cursor_line_style(Style::default().add_modifier(Modifier::UNDERLINED));
-        area_files_include.set_cursor_style(Style::default().add_modifier(Modifier::REVERSED));
+        // area_files_include.set_placeholder_text("Files to include");
+        area_files_include.set_cursor_line_style(Style::default());
+        area_files_include.set_cursor_style(Style::default());
         area_files_include.set_block(
             Block::default()
                 .borders(Borders::ALL)
-                .style(Style::default())
-                .title("Files to include"),
+                .style(Style::default().fg(Color::DarkGray))
+                .title("Paths to include"),
+        );
+
+        // Default to "inactive"
+        let mut area_files_exclude = TextArea::default();
+        // area_files_exclude.set_placeholder_text("Files to exclude");
+        area_files_exclude.set_cursor_line_style(Style::default());
+        area_files_exclude.set_cursor_style(Style::default());
+        area_files_exclude.set_block(
+            Block::default()
+                .borders(Borders::ALL)
+                .style(Style::default().fg(Color::DarkGray))
+                .title("Paths to exclude"),
         );
 
         Self {
             running: true,
             search_res_par: Paragraph::default(),
-            all_areas: vec![area_files_include, area_search],
+            all_areas: vec![area_search, area_files_include, area_files_exclude],
             active: 0,
         }
     }
@@ -85,6 +98,15 @@ impl App {
             include.push_str("**");
         }
 
+        let exclude = &mut self.all_areas[2].lines()[0].to_owned();
+        if !exclude.is_empty() {
+            exclude.insert_str(0, "!");
+
+            if exclude.ends_with('/') {
+                exclude.push_str("**");
+            }
+        }
+
         let res = Command::new("rg")
             .arg("--fixed-strings") // Treat all patterns as literals instead of as regular expressions.
             .arg("--heading") // This flag prints the file path above clusters of matches from each file instead of printing the file path as a prefix for each matched line.
@@ -93,6 +115,8 @@ impl App {
             .arg("--line-number") // Show line numbers (1-based).
             .arg("-g") // Include or exclude files and directories for searching that match the given glob.
             .arg(include)
+            .arg("-g") // Include or exclude files and directories for searching that match the given glob.
+            .arg(exclude)
             .arg(&self.all_areas[0].lines()[0])
             .output()
             .expect("error executing rg search");
