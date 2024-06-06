@@ -32,6 +32,7 @@ src/
 - [ ] enable opening default editor from selected line in search result
 - [ ] use JSON output and color-code based on that
 - [ ] support multi-line search
+- [ ] fix `clone()`'s: https://rust-unofficial.github.io/patterns/anti_patterns/borrow_clone.html
 
 ### Possible `rg` options to support:
 
