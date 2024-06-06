@@ -1,4 +1,7 @@
-use ratatui::widgets::Paragraph;
+use ratatui::{
+    style::{Color, Modifier, Style},
+    widgets::{Block, Borders, Paragraph},
+};
 use std::{error, process::Command};
 use tui_textarea::TextArea;
 
@@ -10,50 +13,48 @@ pub struct App {
     /// Is the application running?
     pub running: bool,
 
-    /// Search text area.
-    pub search_area: TextAreaToggle,
-
-    /// Include files area.
-    pub include_files_area: TextAreaToggle,
-
-    // TODO: add files to exclude
-    /// Keeping track of our text areas so we can toggle
-    /// which one is active and which one isn't
-    pub all_areas: Vec<TextAreaToggle>,
-
     /// Search result paragraph.
     pub search_res_par: Paragraph<'static>,
-}
 
-#[derive(Debug, Default, Clone)]
-pub struct TextAreaToggle {
-    pub area: TextArea<'static>,
-    pub active: bool,
-}
+    /// Keeping track of our text areas
+    pub all_areas: Vec<TextArea<'static>>,
 
-impl TextAreaToggle {
-    fn new_active() -> Self {
-        Self {
-            area: TextArea::default(),
-            active: true,
-        }
-    }
+    /// Keep track what index is active
+    pub active: usize,
 }
 
 impl Default for App {
     /// Constructs a new instance of [`App`].
     fn default() -> Self {
-        let mut app = App {
+        let mut area_search = TextArea::default();
+        area_search.set_placeholder_text("Start typing to search...");
+        area_search.set_cursor_line_style(Style::default());
+        area_search.set_cursor_style(Style::default());
+        area_search.set_block(
+            Block::default()
+                .borders(Borders::ALL)
+                .style(Style::default().fg(Color::DarkGray))
+                .title("SEARCH"),
+        );
+
+        let mut area_files_include = TextArea::default();
+        area_files_include.set_placeholder_text("Files to include");
+        area_files_include
+            .set_cursor_line_style(Style::default().add_modifier(Modifier::UNDERLINED));
+        area_files_include.set_cursor_style(Style::default().add_modifier(Modifier::REVERSED));
+        area_files_include.set_block(
+            Block::default()
+                .borders(Borders::ALL)
+                .style(Style::default())
+                .title(" Active "),
+        );
+
+        Self {
             running: true,
-            search_area: TextAreaToggle::new_active(),
-            include_files_area: TextAreaToggle::default(),
             search_res_par: Paragraph::default(),
-            all_areas: vec![],
-        };
-
-        app.all_areas = vec![app.search_area.clone(), app.include_files_area.clone()];
-
-        app
+            all_areas: vec![area_files_include, area_search],
+            active: 0,
+        }
     }
 }
 
@@ -68,13 +69,14 @@ impl App {
 
     /// Search the given term with rg.
     pub fn search(&mut self) {
+        // println!("searching for: {:?}", &self.all_areas[0].lines());
         let res = Command::new("rg")
             .arg("--fixed-strings") // Treat all patterns as literals instead of as regular expressions.
             .arg("--heading") // This flag prints the file path above clusters of matches from each file instead of printing the file path as a prefix for each matched line.
             .arg("--trim") // When set, all ASCII whitespace at the beginning of each line printed will be removed.
             .arg("--ignore-case") // When  this  flag  is  provided,  all patterns will be searched case insensitively.
             .arg("--line-number") // Show line numbers (1-based).
-            .arg(&self.search_area.area.lines()[0])
+            .arg(&self.all_areas[0].lines()[0])
             .output()
             .expect("error executing rg search");
 
