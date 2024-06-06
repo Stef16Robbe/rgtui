@@ -80,17 +80,6 @@ impl App {
         self.running = false;
     }
 
-    // -g GLOB, --glob=GLOB
-    //  Include or exclude files and directories for searching that match the given glob. This always overrides any other ignore logic. Multiple glob flags may be used. Globbing rules  match  .gitignore
-    //  globs. Precede a glob with a ! to exclude it. If multiple globs match a file or directory, the glob given later in the command line takes precedence.
-
-    //  As  an extension, globs support specifying alternatives: -g 'ab{c,d}*' is equivalent to -g abc -g abd.  Empty alternatives like -g 'ab{,c}' are not currently supported. Note that this syntax ex‐
-    //  tension is also currently enabled in gitignore files, even though this syntax isn't supported by git itself. ripgrep may disable this syntax extension in gitignore files, but it will always  re‐
-    //  main available via the -g/--glob flag.
-
-    //  When  this  flag  is  set,  every file and directory is applied to it to test for a match. For example, if you only want to search in a particular directory foo, then -g foo is incorrect because
-    //  foo/bar does not match the glob foo. Instead, you should use -g 'foo/**'.
-
     /// Search the given term with rg.
     pub fn search(&mut self) {
         let include = &mut self.all_areas[1].lines()[0].to_owned();
@@ -100,7 +89,7 @@ impl App {
 
         let exclude = &mut self.all_areas[2].lines()[0].to_owned();
         if !exclude.is_empty() {
-            exclude.insert_str(0, "!");
+            exclude.insert(0, '!');
 
             if exclude.ends_with('/') {
                 exclude.push_str("**");
