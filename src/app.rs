@@ -34,7 +34,7 @@ impl Default for App {
             Block::default()
                 .borders(Borders::ALL)
                 .style(Style::default().fg(Color::DarkGray))
-                .title("SEARCH"),
+                .title("Search term"),
         );
 
         let mut area_files_include = TextArea::default();
@@ -46,7 +46,7 @@ impl Default for App {
             Block::default()
                 .borders(Borders::ALL)
                 .style(Style::default())
-                .title(" Active "),
+                .title("Files to include"),
         );
 
         Self {
@@ -69,7 +69,6 @@ impl App {
 
     /// Search the given term with rg.
     pub fn search(&mut self) {
-        // println!("searching for: {:?}", &self.all_areas[0].lines());
         let res = Command::new("rg")
             .arg("--fixed-strings") // Treat all patterns as literals instead of as regular expressions.
             .arg("--heading") // This flag prints the file path above clusters of matches from each file instead of printing the file path as a prefix for each matched line.

@@ -2,7 +2,7 @@ use crate::app::{App, AppResult};
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use ratatui::{
     style::{Color, Modifier, Style},
-    widgets::{Block, Borders, Paragraph},
+    widgets::Paragraph,
 };
 use tui_textarea::TextArea;
 
@@ -10,22 +10,18 @@ fn deactivate(textarea: &mut TextArea<'_>) {
     textarea.set_cursor_line_style(Style::default());
     textarea.set_cursor_style(Style::default());
     textarea.set_block(
-        Block::default()
-            .borders(Borders::ALL)
-            .style(Style::default().fg(Color::DarkGray))
-            .title(" Inactive (TAB to switch) "),
+        textarea
+            .block()
+            .unwrap()
+            .clone()
+            .style(Style::default().fg(Color::DarkGray)),
     );
 }
 
 fn activate(textarea: &mut TextArea<'_>) {
     textarea.set_cursor_line_style(Style::default().add_modifier(Modifier::UNDERLINED));
     textarea.set_cursor_style(Style::default().add_modifier(Modifier::REVERSED));
-    textarea.set_block(
-        Block::default()
-            .borders(Borders::ALL)
-            .style(Style::default())
-            .title(" Active "),
-    );
+    textarea.set_block(textarea.block().unwrap().clone().style(Style::default()));
 }
 
 /// Handles the key events and updates the state of [`App`].
