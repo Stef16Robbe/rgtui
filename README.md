@@ -27,8 +27,9 @@ src/
 ### General features:
 
 - [x] support excluding/including files based on path & glob patterns
-- [ ] support scrolling up/down in rg result
+- [x] support scrolling up/down in rg result
 - [ ] move config to struct, allow configuration of settings in UI
+- [ ] enable opening default editor from selected line in search result
 - [ ] use JSON output and color-code based on that
 - [ ] support multi-line search
 
