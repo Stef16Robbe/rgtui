@@ -34,7 +34,7 @@ src/
 
 ### Possible `rg` options to support:
 
-- [ ] `-g` or `--glob-case-insensitive`: glob searching, for including files (prepend `!` to ignore the pattern)
+- [x] `-g` or `--glob-case-insensitive`: glob searching, for including files (prepend `!` to ignore the pattern)
 - [ ] `--json` if necessary
 - [ ] `--sort`
 - [ ] `--hidden`
