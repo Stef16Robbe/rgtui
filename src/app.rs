@@ -26,13 +26,19 @@ pub struct App {
 pub struct ParagraphState {
     pub paragraph: Paragraph<'static>,
     pub current_scroll_index: u16,
+    pub max_scroll_index: u16,
 }
 
 impl ParagraphState {
-    pub fn new(paragraph: Paragraph<'static>, current_scroll_index: u16) -> Self {
+    pub fn new(
+        paragraph: Paragraph<'static>,
+        current_scroll_index: u16,
+        max_scroll_index: u16,
+    ) -> Self {
         ParagraphState {
             paragraph,
             current_scroll_index,
+            max_scroll_index,
         }
     }
 }
@@ -81,6 +87,7 @@ impl Default for App {
             search_res_par: ParagraphState {
                 paragraph: Paragraph::default(),
                 current_scroll_index: 0,
+                max_scroll_index: 0,
             },
             all_areas: vec![area_search, area_files_include, area_files_exclude],
             active: 0,
@@ -127,13 +134,16 @@ impl App {
             .output()
             .expect("error executing rg search");
 
+        let res_text = std::str::from_utf8(&res.stdout)
+            .expect("could not convert rg search result to utf8 string")
+            .to_string();
+
+        let len = res_text.lines().count() as u16;
+
         self.search_res_par = ParagraphState {
-            paragraph: Paragraph::new(
-                std::str::from_utf8(&res.stdout)
-                    .expect("could not convert rg search result to utf8 string")
-                    .to_string(),
-            ),
+            paragraph: Paragraph::new(res_text),
             current_scroll_index: 0,
+            max_scroll_index: len,
         };
     }
 }

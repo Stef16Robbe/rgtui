@@ -60,14 +60,13 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
 pub fn handle_mouse_events(mouse_event: MouseEvent, app: &mut App) -> AppResult<()> {
     match mouse_event.kind {
         MouseEventKind::ScrollDown => {
-            let scroll_idx = app
-                .search_res_par
-                .current_scroll_index
-                .checked_add(1)
-                .unwrap();
+            let scroll_idx = (app.search_res_par.current_scroll_index + 1)
+                .min(app.search_res_par.max_scroll_index - 1);
+
             app.search_res_par = ParagraphState::new(
                 app.search_res_par.paragraph.clone().scroll((scroll_idx, 0)),
                 scroll_idx,
+                app.search_res_par.max_scroll_index,
             )
         }
         MouseEventKind::ScrollUp => {
@@ -75,10 +74,12 @@ pub fn handle_mouse_events(mouse_event: MouseEvent, app: &mut App) -> AppResult<
                 .search_res_par
                 .current_scroll_index
                 .checked_sub(1)
-                .unwrap();
+                .unwrap_or(0);
+
             app.search_res_par = ParagraphState::new(
                 app.search_res_par.paragraph.clone().scroll((scroll_idx, 0)),
                 scroll_idx,
+                app.search_res_par.max_scroll_index,
             )
         }
         _ => (),
