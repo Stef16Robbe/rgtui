@@ -2,7 +2,7 @@ use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
 use rgtui::app::{App, AppResult};
 use rgtui::event::{Event, EventHandler};
-use rgtui::handler::handle_key_events;
+use rgtui::handler::{handle_key_events, handle_mouse_events};
 use rgtui::tui::Tui;
 use std::io;
 
@@ -25,7 +25,7 @@ fn main() -> AppResult<()> {
         match tui.events.next()? {
             Event::Tick => app.tick(),
             Event::Key(key_event) => handle_key_events(key_event, &mut app)?,
-            Event::Mouse(_) => {}
+            Event::Mouse(mouse_event) => handle_mouse_events(mouse_event, &mut app)?,
             Event::Resize(_, _) => {}
         }
     }

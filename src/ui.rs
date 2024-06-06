@@ -27,6 +27,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
 
     let search_res_par = app
         .search_res_par
+        .paragraph
         .clone() // FIXME
         .alignment(Alignment::Left)
         .block(Block::bordered().border_type(BorderType::Rounded));
