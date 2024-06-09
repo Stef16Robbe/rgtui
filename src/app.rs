@@ -1,3 +1,4 @@
+use log::info;
 use ratatui::{
     style::{Color, Modifier, Style},
     widgets::{Block, Borders, Paragraph},
@@ -120,8 +121,8 @@ impl App {
             }
         }
 
-        let res = Command::new("rg")
-            .arg("--fixed-strings") // Treat all patterns as literals instead of as regular expressions.
+        let mut cmd = Command::new("rg");
+        cmd.arg("--fixed-strings") // Treat all patterns as literals instead of as regular expressions.
             .arg("--heading") // This flag prints the file path above clusters of matches from each file instead of printing the file path as a prefix for each matched line.
             .arg("--trim") // When set, all ASCII whitespace at the beginning of each line printed will be removed.
             .arg("--ignore-case") // When  this  flag  is  provided,  all patterns will be searched case insensitively.
@@ -130,9 +131,11 @@ impl App {
             .arg(include)
             .arg("-g") // Include or exclude files and directories for searching that match the given glob.
             .arg(exclude)
-            .arg(&self.all_areas[0].lines()[0])
-            .output()
-            .expect("error executing rg search");
+            .arg(&self.all_areas[0].lines()[0]);
+
+        info!("Executing ripgrep with args: {:?}", cmd.get_args());
+
+        let res = cmd.output().expect("error executing rg search");
 
         let res_text = std::str::from_utf8(&res.stdout)
             .expect("could not convert rg search result to utf8 string")

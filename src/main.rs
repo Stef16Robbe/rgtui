@@ -1,12 +1,25 @@
+use log::info;
 use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
 use rgtui::app::{App, AppResult};
 use rgtui::event::{Event, EventHandler};
 use rgtui::handler::{handle_key_events, handle_mouse_events};
 use rgtui::tui::Tui;
+use simplelog::{Config, LevelFilter, WriteLogger};
+use std::fs::File;
 use std::io;
 
 fn main() -> AppResult<()> {
+    // Initialize logging
+    let _ = WriteLogger::init(
+        LevelFilter::Info,
+        Config::default(),
+        File::create("rgtui.log").unwrap(),
+    )
+    .unwrap();
+
+    info!("Starting rgtui...");
+
     // Create an application.
     let mut app = App::default();
 
@@ -31,6 +44,7 @@ fn main() -> AppResult<()> {
     }
 
     // Exit the user interface.
+    info!("Exiting...");
     tui.exit()?;
     Ok(())
 }

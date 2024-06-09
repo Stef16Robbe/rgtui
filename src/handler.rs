@@ -1,5 +1,6 @@
 use crate::app::{App, AppResult, ParagraphState};
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers, MouseEvent, MouseEventKind};
+use log::info;
 use ratatui::{
     style::{Color, Modifier, Style},
     widgets::Paragraph,
@@ -26,6 +27,7 @@ fn activate(textarea: &mut TextArea<'_>) {
 
 /// Handles the key events and updates the state of [`App`].
 pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
+    info!("Handling key event: {:?}", key_event);
     // Exit application on `Ctrl-C`
     if key_event.modifiers == KeyModifiers::CONTROL && key_event.code == KeyCode::Char('c') {
         app.quit();
@@ -58,6 +60,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
 }
 
 pub fn handle_mouse_events(mouse_event: MouseEvent, app: &mut App) -> AppResult<()> {
+    info!("Handling mouse event: {:?}", mouse_event);
     match mouse_event.kind {
         MouseEventKind::ScrollDown => {
             let scroll_idx = (app.search_res_par.current_scroll_index + 1)
