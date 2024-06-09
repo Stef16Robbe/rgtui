@@ -28,6 +28,7 @@ fn activate(textarea: &mut TextArea<'_>) {
 /// Handles the key events and updates the state of [`App`].
 pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
     info!("Handling key event: {:?}", key_event);
+
     // Exit application on `Ctrl-C`
     if key_event.modifiers == KeyModifiers::CONTROL && key_event.code == KeyCode::Char('c') {
         app.quit();
@@ -53,6 +54,8 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
                 app.search();
             } else {
                 app.search_res_par.paragraph = Paragraph::default();
+                app.scrollbar_vert_state = app.scrollbar_vert_state.content_length(0);
+                app.scrollbar_vert_state = app.scrollbar_vert_state.position(0);
             }
         }
     }
@@ -61,6 +64,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
 
 pub fn handle_mouse_events(mouse_event: MouseEvent, app: &mut App) -> AppResult<()> {
     info!("Handling mouse event: {:?}", mouse_event);
+
     match mouse_event.kind {
         MouseEventKind::ScrollDown => {
             let scroll_idx = (app.search_res_par.current_scroll_index + 1)
@@ -70,7 +74,9 @@ pub fn handle_mouse_events(mouse_event: MouseEvent, app: &mut App) -> AppResult<
                 app.search_res_par.paragraph.clone().scroll((scroll_idx, 0)),
                 scroll_idx,
                 app.search_res_par.max_scroll_index,
-            )
+            );
+
+            app.scrollbar_vert_state = app.scrollbar_vert_state.position(scroll_idx as usize);
         }
         MouseEventKind::ScrollUp => {
             let scroll_idx = app
@@ -83,7 +89,9 @@ pub fn handle_mouse_events(mouse_event: MouseEvent, app: &mut App) -> AppResult<
                 app.search_res_par.paragraph.clone().scroll((scroll_idx, 0)),
                 scroll_idx,
                 app.search_res_par.max_scroll_index,
-            )
+            );
+
+            app.scrollbar_vert_state = app.scrollbar_vert_state.position(scroll_idx as usize);
         }
         _ => (),
     }

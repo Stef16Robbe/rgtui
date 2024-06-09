@@ -1,7 +1,7 @@
 use log::info;
 use ratatui::{
     style::{Color, Modifier, Style},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, Borders, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState},
 };
 use std::{error, process::Command};
 use tui_textarea::TextArea;
@@ -22,6 +22,8 @@ pub struct App {
 
     /// Keep track what textarea index is active
     pub active: usize,
+
+    pub scrollbar_vert_state: ScrollbarState,
 }
 
 pub struct ParagraphState {
@@ -61,7 +63,6 @@ impl Default for App {
 
         // Default to "inactive"
         let mut area_files_include = TextArea::default();
-        // area_files_include.set_placeholder_text("Files to include");
         area_files_include.set_cursor_line_style(Style::default());
         area_files_include.set_cursor_style(Style::default());
         area_files_include.set_block(
@@ -73,7 +74,6 @@ impl Default for App {
 
         // Default to "inactive"
         let mut area_files_exclude = TextArea::default();
-        // area_files_exclude.set_placeholder_text("Files to exclude");
         area_files_exclude.set_cursor_line_style(Style::default());
         area_files_exclude.set_cursor_style(Style::default());
         area_files_exclude.set_block(
@@ -82,6 +82,8 @@ impl Default for App {
                 .style(Style::default().fg(Color::DarkGray))
                 .title("Paths to exclude"),
         );
+
+        let scrollbar_vert_state = ScrollbarState::new(0).position(0);
 
         Self {
             running: true,
@@ -92,6 +94,7 @@ impl Default for App {
             },
             all_areas: vec![area_search, area_files_include, area_files_exclude],
             active: 0,
+            scrollbar_vert_state,
         }
     }
 }
@@ -141,12 +144,14 @@ impl App {
             .expect("could not convert rg search result to utf8 string")
             .to_string();
 
-        let len = res_text.lines().count() as u16;
+        let len = res_text.lines().count();
 
         self.search_res_par = ParagraphState {
             paragraph: Paragraph::new(res_text),
             current_scroll_index: 0,
-            max_scroll_index: len,
+            max_scroll_index: len as u16,
         };
+
+        self.scrollbar_vert_state = self.scrollbar_vert_state.content_length(len);
     }
 }

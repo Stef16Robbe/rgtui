@@ -1,6 +1,7 @@
+use log::info;
 use ratatui::{
-    layout::{Alignment, Constraint, Direction, Layout},
-    widgets::{Block, BorderType},
+    layout::{Alignment, Constraint, Direction, Layout, Margin},
+    widgets::{Block, BorderType, Scrollbar, ScrollbarOrientation},
     Frame,
 };
 
@@ -38,4 +39,20 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     }
 
     frame.render_widget(search_res_par, search_res_right);
+
+    let scrollbar_vert = Scrollbar::new(ScrollbarOrientation::VerticalRight)
+        .begin_symbol(Some("↑"))
+        .end_symbol(Some("↓"));
+
+    info!("Rendering scroll bar: {:?}", &app.scrollbar_vert_state);
+
+    frame.render_stateful_widget(
+        scrollbar_vert,
+        search_res_right.inner(&Margin {
+            // using an inner vertical margin of 1 unit makes the scrollbar inside the block
+            vertical: 1,
+            horizontal: 0,
+        }),
+        &mut app.scrollbar_vert_state,
+    );
 }

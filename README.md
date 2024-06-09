@@ -28,7 +28,7 @@ src/
 - [x] support excluding/including files based on path & glob patterns
 - [x] support scrolling up/down in rg result
 - [x] add logging
-- [ ] add vertical scroll bar
+- [x] add vertical scroll bar
 - [ ] either wrap lines or add horizontal scroll bar
 - [ ] move config to struct, allow configuration of settings in UI
 - [ ] enable opening default editor from selected line in search result
