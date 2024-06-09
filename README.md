@@ -28,7 +28,7 @@ src/
 
 - [x] support excluding/including files based on path & glob patterns
 - [x] support scrolling up/down in rg result
-- [ ] add logging
+- [x] add logging
 - [ ] move config to struct, allow configuration of settings in UI
 - [ ] enable opening default editor from selected line in search result
 - [ ] use JSON output and color-code based on that
