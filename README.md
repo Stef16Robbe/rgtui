@@ -36,6 +36,7 @@ src/
 - [ ] support multi-line search
 - [ ] add tests
 - [ ] add search/replace
+- [ ] make use of ripgrep's internal crate's instead of issuing a `Command`
 - [ ] fix `clone()`'s: https://rust-unofficial.github.io/patterns/anti_patterns/borrow_clone.html
 
 ### Possible `rg` options to support:
