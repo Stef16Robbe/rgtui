@@ -4,9 +4,8 @@ Simple TUI wrapper around [ripgrep](https://github.com/BurntSushi/ripgrep), insp
 
 It's written with:
 
-- [ratatui](https://github.com/ratatui-org/ratatui)
-- [crossterm](https://github.com/crossterm-rs/crossterm)
-- [tui-textarea](https://github.com/rhysd/tui-textarea)
+- [ratatui](https://github.com/ratatui-org/ratatui), [crossterm](https://github.com/crossterm-rs/crossterm) & [tui-textarea](https://github.com/rhysd/tui-textarea) for the TUI elements
+- [log](https://github.com/rust-lang/log) and [simplelog.rs](https://github.com/Drakulix/simplelog.rs) for logging
 - ...
 
 App layout (generated with [ratatui templates](https://github.com/ratatui-org/templates)):
@@ -33,6 +32,7 @@ src/
 - [ ] enable opening default editor from selected line in search result
 - [ ] use JSON output and color-code based on that
 - [ ] support multi-line search
+- [ ] add tests
 - [ ] fix `clone()`'s: https://rust-unofficial.github.io/patterns/anti_patterns/borrow_clone.html
 
 ### Possible `rg` options to support:
