@@ -35,6 +35,7 @@ src/
 - [ ] use JSON output and color-code based on that
 - [ ] support multi-line search
 - [ ] add tests
+- [ ] add search/replace
 - [ ] fix `clone()`'s: https://rust-unofficial.github.io/patterns/anti_patterns/borrow_clone.html
 
 ### Possible `rg` options to support:
