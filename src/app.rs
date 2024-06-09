@@ -1,10 +1,13 @@
 use log::info;
 use ratatui::{
     style::{Color, Modifier, Style},
-    widgets::{Block, Borders, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState},
+    widgets::{Block, Borders, Paragraph, ScrollbarState},
 };
-use std::{error, process::Command};
+use serde_jsonlines::JsonLinesReader;
+use std::{error, io::Cursor, process::Command};
 use tui_textarea::TextArea;
+
+use crate::message::{Data, Message};
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
@@ -134,20 +137,52 @@ impl App {
             .arg(include)
             .arg("-g") // Include or exclude files and directories for searching that match the given glob.
             .arg(exclude)
+            .arg("--json")
             .arg(&self.all_areas[0].lines()[0]);
 
         info!("Executing ripgrep with args: {:?}", cmd.get_args());
 
-        let res = cmd.output().expect("error executing rg search");
+        let output = cmd.output().expect("error executing rg search").stdout;
+        let buff = Cursor::new(output);
+        let reader = JsonLinesReader::new(buff);
+        let messages = reader
+            .read_all::<Message>()
+            .collect::<std::io::Result<Vec<_>>>()
+            .unwrap();
 
-        let res_text = std::str::from_utf8(&res.stdout)
-            .expect("could not convert rg search result to utf8 string")
-            .to_string();
+        let mut output = String::new();
 
-        let len = res_text.lines().count();
+        let mut old_fn = "";
+        for mtch in messages.iter().filter_map(|msg| {
+            if let Message::Match(m) = msg {
+                Some(m)
+            } else {
+                None
+            }
+        }) {
+            let file_name = match mtch.path.as_ref().unwrap() {
+                Data::Text { text } => text,
+                Data::Bytes { .. } => todo!("handle non-utf8 shizzle"),
+            };
+
+            if file_name != old_fn {
+                output.push_str("\n");
+                output.push_str(file_name);
+                output.push_str("\n");
+                old_fn = file_name;
+            }
+
+            let matched_line = match &mtch.lines {
+                Data::Text { text } => text,
+                Data::Bytes { .. } => todo!("handle non-utf8 shizzle"),
+            };
+            output.push_str(&format!("{}:{}", mtch.line_number.unwrap(), matched_line));
+        }
+
+        let len = output.lines().count();
 
         self.search_res_par = ParagraphState {
-            paragraph: Paragraph::new(res_text),
+            paragraph: Paragraph::new(output),
             current_scroll_index: 0,
             max_scroll_index: len as u16,
         };
