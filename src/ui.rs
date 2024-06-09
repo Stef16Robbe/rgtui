@@ -1,7 +1,7 @@
 use log::info;
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Margin},
-    widgets::{Block, BorderType, Scrollbar, ScrollbarOrientation},
+    widgets::{Block, BorderType, Scrollbar, ScrollbarOrientation, Wrap},
     Frame,
 };
 
@@ -30,6 +30,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         .search_res_par
         .paragraph
         .clone() // FIXME
+        .wrap(Wrap { trim: false })
         .alignment(Alignment::Left)
         .block(Block::bordered().border_type(BorderType::Rounded));
 
@@ -43,8 +44,6 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     let scrollbar_vert = Scrollbar::new(ScrollbarOrientation::VerticalRight)
         .begin_symbol(Some("↑"))
         .end_symbol(Some("↓"));
-
-    info!("Rendering scroll bar: {:?}", &app.scrollbar_vert_state);
 
     frame.render_stateful_widget(
         scrollbar_vert,

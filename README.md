@@ -29,7 +29,7 @@ src/
 - [x] support scrolling up/down in rg result
 - [x] add logging
 - [x] add vertical scroll bar
-- [ ] either wrap lines or add horizontal scroll bar
+- [x] either wrap lines or add horizontal scroll bar
 - [ ] move config to struct, allow configuration of settings in UI
 - [ ] enable opening default editor from selected line in search result
 - [ ] use JSON output and color-code based on that
