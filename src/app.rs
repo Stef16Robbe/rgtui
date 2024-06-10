@@ -154,6 +154,7 @@ impl App {
         let mut output: Vec<Line> = vec![];
 
         let mut old_fn = "";
+        // TODO: set submatch to highlight red
         for mtch in messages.iter().filter_map(|msg| {
             if let Message::Match(m) = msg {
                 Some(m)
@@ -168,8 +169,8 @@ impl App {
 
             if file_name != old_fn {
                 output.push(Line::from(Span::styled(
-                    format!("\n{}\n", file_name),
-                    Style::new().green(),
+                    format!("{}\n", file_name),
+                    Style::new().magenta(),
                 )));
                 old_fn = file_name;
             }
@@ -179,12 +180,14 @@ impl App {
                 Data::Bytes { .. } => todo!("handle non-utf8 shizzle"),
             };
 
-            // FIXME: no color on this line?
             let line_number =
-                Span::styled(mtch.line_number.unwrap().to_string(), Style::new().red());
-            let matched_line = Span::raw(matched_line);
+                Span::styled(mtch.line_number.unwrap().to_string(), Style::new().green());
 
-            output.push(Line::from(format!("{}:{}", line_number, matched_line)));
+            output.push(Line::from(vec![
+                line_number,
+                Span::raw(":"),
+                Span::raw(matched_line.clone()),
+            ]));
         }
 
         let len = output.len();
