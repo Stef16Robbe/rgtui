@@ -32,7 +32,7 @@ src/
 - [x] either wrap lines or add horizontal scroll bar
 - [ ] move config to struct, allow configuration of settings in UI
 - [ ] enable opening default editor from selected line in search result
-- [ ] use JSON output and color-code based on that
+- [x] use JSON output and color-code based on that
 - [ ] support multi-line search
 - [ ] add tests
 - [ ] add search/replace

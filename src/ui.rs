@@ -1,4 +1,3 @@
-use log::info;
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Margin},
     widgets::{Block, BorderType, Scrollbar, ScrollbarOrientation, Wrap},

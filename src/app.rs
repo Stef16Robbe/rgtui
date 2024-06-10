@@ -1,6 +1,7 @@
 use log::info;
 use ratatui::{
-    style::{Color, Modifier, Style},
+    style::{Color, Modifier, Style, Stylize},
+    text::{Line, Span},
     widgets::{Block, Borders, Paragraph, ScrollbarState},
 };
 use serde_jsonlines::JsonLinesReader;
@@ -150,7 +151,7 @@ impl App {
             .collect::<std::io::Result<Vec<_>>>()
             .unwrap();
 
-        let mut output = String::new();
+        let mut output: Vec<Line> = vec![];
 
         let mut old_fn = "";
         for mtch in messages.iter().filter_map(|msg| {
@@ -166,9 +167,10 @@ impl App {
             };
 
             if file_name != old_fn {
-                output.push_str("\n");
-                output.push_str(file_name);
-                output.push_str("\n");
+                output.push(Line::from(Span::styled(
+                    format!("\n{}\n", file_name),
+                    Style::new().green(),
+                )));
                 old_fn = file_name;
             }
 
@@ -176,10 +178,16 @@ impl App {
                 Data::Text { text } => text,
                 Data::Bytes { .. } => todo!("handle non-utf8 shizzle"),
             };
-            output.push_str(&format!("{}:{}", mtch.line_number.unwrap(), matched_line));
+
+            // FIXME: no color on this line?
+            let line_number =
+                Span::styled(mtch.line_number.unwrap().to_string(), Style::new().red());
+            let matched_line = Span::raw(matched_line);
+
+            output.push(Line::from(format!("{}:{}", line_number, matched_line)));
         }
 
-        let len = output.lines().count();
+        let len = output.len();
 
         self.search_res_par = ParagraphState {
             paragraph: Paragraph::new(output),
