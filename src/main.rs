@@ -14,7 +14,7 @@ fn main() -> AppResult<()> {
     let _ = WriteLogger::init(
         LevelFilter::Info,
         Config::default(),
-        File::create("rgtui.log").unwrap(),
+        File::create("/tmp/rgtui.log").unwrap(),
     )
     .unwrap();
 
