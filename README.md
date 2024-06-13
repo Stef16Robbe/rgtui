@@ -13,10 +13,8 @@ I wanted to learn Rust & Ratatui so I made a simple TUI wrapper around [ripgrep]
 3. open `rgtui` in any directory you want to search in :)
 
 ```shell
-wget https://github.com/Stef16Robbe/rgtui/releases/download/v0.1/rgtui-x86_64-unknown-linux-gnu
-mv rgtui-x86_64-unknown-linux-gnu rgtui
-chmod u+x rgtui
-mv rgtui $HOME/.local/bin
+wget -P $HOME/.local/bin https://github.com/Stef16Robbe/rgtui/releases/latest/download/rgtui-x86_64-unknown-linux-gnu
+chmod u+x $HOME/.local/bin/rgtui
 ```
 
 ## Setup
