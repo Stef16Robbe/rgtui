@@ -6,6 +6,19 @@ I wanted to learn Rust & Ratatui so I made a simple TUI wrapper around [ripgrep]
 
 ![Screenshot showcase of rgtui](/assets/showcase-screenshot.png?raw=true)
 
+## Usage
+
+1. Download a binary from the [releases section](https://github.com/Stef16Robbe/rgtui/releases).
+2. Add the binary to your `$PATH`
+3. open `rgtui` in any directory you want to search in :)
+
+```shell
+wget https://github.com/Stef16Robbe/rgtui/releases/download/v0.1/rgtui-x86_64-unknown-linux-gnu
+mv rgtui-x86_64-unknown-linux-gnu rgtui
+chmod u+x rgtui
+mv rgtui $HOME/.local/bin
+```
+
 ## Setup
 
 It's written with:
