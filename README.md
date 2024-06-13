@@ -1,6 +1,6 @@
 # rgtui
 
-Simple TUI wrapper around [ripgrep](https://github.com/BurntSushi/ripgrep), inspired by VSCode's [project search](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options)
+I wanted to learn Rust & Ratatui so I made a simple TUI wrapper around [ripgrep](https://github.com/BurntSushi/ripgrep), inspired by VSCode's [project search](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options)
 
 ## Showcase
 
@@ -12,7 +12,6 @@ It's written with:
 
 - [ratatui](https://github.com/ratatui-org/ratatui), [crossterm](https://github.com/crossterm-rs/crossterm) & [tui-textarea](https://github.com/rhysd/tui-textarea) for the TUI elements
 - [log](https://github.com/rust-lang/log) and [simplelog.rs](https://github.com/Drakulix/simplelog.rs) for logging
-- ...
 
 App layout (generated with [ratatui templates](https://github.com/ratatui-org/templates)):
 
